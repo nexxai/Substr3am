@@ -1,6 +1,6 @@
 # Substr3am
 
-Substr3am is a python tool inspired by [subbrute](https://github.com/TheRook/subbrute) and [Sublist3r](https://github.com/aboul3la/Sublist3r) designed to generate a list of potential subdomains using the certstream service. It helps penetration testers and bug hunters collect and gather subdomains for their lists by connecting to the certstream firehose, watching for real subdomains, and adding them to a list for use with the above tools.
+Substr3am is a python tool inspired by [subbrute](https://github.com/TheRook/subbrute) and [Sublist3r](https://github.com/aboul3la/Sublist3r) designed to generate a list of potential subdomains using the [certstream](https://github.com/CaliDog/certstream-python) service. It helps penetration testers and bug hunters collect and gather subdomains for their lists by connecting to the certstream firehose, watching for real subdomains, and adding them to a list for use with the above tools.
 
 ## Installation
 
@@ -49,6 +49,7 @@ Substr3am is licensed under the GNU GPL license. take a look at the [LICENSE](ht
 ## Credits
 
 * [aboul3la](https://github.com/aboul3la) - Substr3am's code was inspired by his wonderful tool **Sublist3r**
+* [CaliDog](https://github.com/CaliDog) - For providing the awesome **certstream** service
 
 ## Version
 **Current version is 1.0**

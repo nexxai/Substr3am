@@ -67,9 +67,6 @@ def print_callback(message, context):
                 
                 # As long as none of the substrings match, continue on
                 if i == 0:
-                    # Debug line
-                    print(subdomain)
-
                     # Set up the connection to the sqlite db
                     engine = create_engine('sqlite:///subdomains.db')
                     Base.metadata.bind = engine
@@ -86,6 +83,9 @@ def print_callback(message, context):
                         subdomain_new = Subdomain(subdomain=subdomain)
                         session.add(subdomain_new)
                         session.commit()
+
+                        # Debug line
+                        print(subdomain)
 
 def dump():
     # Set up the connection to the sqlite db

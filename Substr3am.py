@@ -21,7 +21,11 @@ def print_callback(message, context):
     # Add any subdomains you want to ignore here
     subdomains_to_ignore = [
         "www",
-        "*"
+        "*",
+        "azuregateway",
+        "direwolf",
+        "devshell-vm-",
+        "device-local"
     ]
 
     if message['message_type'] == "heartbeat":
@@ -53,8 +57,17 @@ def print_callback(message, context):
                     # ...and we only care about the first entry
                     subdomain = subdomain_split[0]  
 
-                # Make sure this subdomain isn't being ignored
-                if subdomain not in subdomains_to_ignore:
+                i = 0
+                # See if any of the subdomains_to_ignore are substrings of the one we're checking
+                # e.g. "devshell-vm" is a substring of "devshell-vm-0000-0000-00000000"
+                for search in subdomains_to_ignore:
+                    # If it matches, increase the counter
+                    if search in subdomain:
+                        i += 1
+                
+                # As long as none of the substrings match, continue on
+                if i == 0:
+                    # Debug line
                     print(subdomain)
 
                     # Set up the connection to the sqlite db

@@ -26,7 +26,22 @@ def print_callback(message, context):
         "direwolf",
         "devshell-vm-",
         "device-local",
-        "-local"
+        "-local",
+        "sni"
+    ]
+
+    subdomains_regex_to_ignore = [
+        # 81d556ba781237c92f0c410f
+        "[a-f0-9]{24}",                         
+        
+        # device1650096-3a628f22
+        "device[a-f0-9]{7}-[a-f0-9]{8}",
+        
+        # e4751426-33f2-4239-9765-56b4cbcb505d
+        "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+
+        #device-3e90cd1b-50dc-48f1-90ac-6389856ccb2e
+        "device-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
     ]
 
     if message['message_type'] == "heartbeat":
@@ -66,7 +81,13 @@ def print_callback(message, context):
                     if search in subdomain:
                         i += 1
                 
-                # As long as none of the substrings match, continue on
+                # See if any of the subdomains_regex_to_ignore are substrings of the one we're checking
+                for search in subdomains_regex_to_ignore:
+                    # If it matches, increase the counter
+                    if re.search(search, subdomain):
+                        i += 1
+
+                # As long as none of the substrings or regexes match, continue on
                 if i == 0:
                     # Set up the connection to the sqlite db
                     engine = create_engine('sqlite:///subdomains.db')

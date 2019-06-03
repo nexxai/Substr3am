@@ -31,9 +31,10 @@ sudo pip3 install -r requirements.txt
 
 ## Usage
 
-Short Form    | Long Form     | Description
-------------- | ------------- |-------------
--d            | --dump        | Dump the list of collected subdomains to names.txt
+Short Form       | Long Form            | Description
+---------------- | -------------------- |-------------
+./Substr3am      |                      | Start collecting subdomains and write them to the subdomains.db sqlite DB
+./Substr3am -d   | ./Substr3am --dump   | Dump the list of collected subdomains to names.txt
 
 ### Examples
 
@@ -44,7 +45,6 @@ Short Form    | Long Form     | Description
 ## License
 
 Substr3am is licensed under the GNU GPL license. take a look at the [LICENSE](https://github.com/nexxai/Substr3am/blob/master/LICENSE) for more information.
-
 
 ## Credits
 

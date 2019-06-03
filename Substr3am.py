@@ -18,14 +18,15 @@ from declarative_sql import Subdomain, Base
 from sqlalchemy.orm import sessionmaker
 
 def print_callback(message, context):
-    # Add any subdomains you want to ignore here
+    # Add any subdomains (or partial strings) you want to ignore here
     subdomains_to_ignore = [
         "www",
         "*",
         "azuregateway",
         "direwolf",
         "devshell-vm-",
-        "device-local"
+        "device-local",
+        "-local"
     ]
 
     if message['message_type'] == "heartbeat":

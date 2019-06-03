@@ -1,3 +1,4 @@
 *.pyc
 subdomains.db
 names.txt
+/.vscode/*

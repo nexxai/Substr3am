@@ -12,7 +12,7 @@ git clone https://github.com/nexxai/Substr3am.git
 
 Substr3am currently supports **Python 3**.  Stop using **Python 2**.  I suck at Python and even I know that.
 
-* The recommened version for Python 3 is **3.7.x**
+* The recommended version for Python 3 is **3.7.x**
 
 ## Dependencies:
 

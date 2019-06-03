@@ -107,7 +107,7 @@ def print_callback(message, context):
                         session.commit()
 
                         # Debug line
-                        print(subdomain)
+                        print("[+] " + subdomain)
                     
                     # It does exist
                     if subdomain_exists:
@@ -118,6 +118,9 @@ def print_callback(message, context):
                         session.query(Subdomain).filter(Subdomain.id == subdomain_exists.id).\
                             update({'count': counter})
                         session.commit()
+
+                        if (counter % 50 == 0):
+                            print("[#] " + subdomain + " (seen " + str(counter) + " times)")
                         
 
 def dump():
@@ -128,7 +131,7 @@ def dump():
     Session.configure(bind=engine)
     session = Session()
 
-    # Get all the subdomains from the DB
+    # Get all the subdomains from the DB and sort them by popularity
     subdomains = session.execute("SELECT * FROM subdomains ORDER BY count DESC").fetchall()
 
     # Assuming there's anything in the list...

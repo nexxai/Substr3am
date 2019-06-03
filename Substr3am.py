@@ -38,10 +38,10 @@ def print_callback(message, context):
         "device[a-f0-9]{7}-[a-f0-9]{8}",
         
         # e4751426-33f2-4239-9765-56b4cbcb505d
-        "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+        "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
 
         #device-3e90cd1b-50dc-48f1-90ac-6389856ccb2e
-        "device-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+        "device-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
     ]
 
     if message['message_type'] == "heartbeat":

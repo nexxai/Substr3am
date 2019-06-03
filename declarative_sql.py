@@ -17,6 +17,7 @@ class Subdomain(Base):
     __tablename__ = 'subdomains'
     id = Column(Integer, primary_key=True)
     subdomain = Column(String(250), nullable=False)
+    count = Column(Integer)
 
 subdomains_db = 'sqlite:///subdomains.db'
 engine = create_engine(subdomains_db)

@@ -13,7 +13,7 @@ import tldextract
 import re
 import argparse
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, update
 from declarative_sql import Subdomain, Base
 from sqlalchemy.orm import sessionmaker
 
@@ -102,12 +102,23 @@ def print_callback(message, context):
                     # It doesn't exist...
                     if not subdomain_exists:
                         # ...so create it
-                        subdomain_new = Subdomain(subdomain=subdomain)
+                        subdomain_new = Subdomain(subdomain=subdomain, count=1)
                         session.add(subdomain_new)
                         session.commit()
 
                         # Debug line
                         print(subdomain)
+                    
+                    # It does exist
+                    if subdomain_exists:
+                        # Add one to the counter to track its popularity
+                        counter = subdomain_exists.count + 1
+
+                        # Add 1 to the counter
+                        session.query(Subdomain).filter(Subdomain.id == subdomain_exists.id).\
+                            update({'count': counter})
+                        session.commit()
+                        
 
 def dump():
     # Set up the connection to the sqlite db
@@ -117,12 +128,15 @@ def dump():
     Session.configure(bind=engine)
     session = Session()
 
-    # Get all the subdomains
-    subdomains = session.query(Subdomain).all()
+    # Get all the subdomains from the DB
+    subdomains = session.execute("SELECT * FROM subdomains ORDER BY count DESC").fetchall()
+
+    # Assuming there's anything in the list...
     if len(subdomains) > 0:
+        # Open the file
         f = open("names.txt", "w")
         for subdomain in subdomains:
-            # And write them to a file
+            # And write them
             f.write(subdomain.subdomain)
             f.write("\r\n")
         f.close()

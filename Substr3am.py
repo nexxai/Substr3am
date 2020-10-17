@@ -53,74 +53,85 @@ def print_callback(message, context):
         # so we want to know about all of them
         domains = message['data']['leaf_cert']['all_domains']
 
+        # Get the domain name from the arguments
+        domain_filter = parse_args().filter
+
         for domain in domains:
             # Use the tldextract library to break the domain into its parts
             extract = tldextract.extract(domain)
-            # But we only care about the subdomain
-            subdomain = extract.subdomain
+            # Determine the domain by adding the chosen name with the TLD/suffix
+            computed_domain = extract.domain + '.' + extract.suffix
 
-            # Make sure there's actually something there
-            if len(subdomain) > 0:
+            # Only continue if one of the following are true:
+            # - We are not filtering by domain at all
+            # - We are filtering by domain and we have a match
+            if domain_filter == None or (domain_filter != None and computed_domain in domain_filter):
 
-                # Sometimes extract.subdomain gives us something like "www.testing.box"
-                # so search for anything with a period in it
-                multi_level = subdomain.find(".")
+                # We only care about the subdomain
+                subdomain = extract.subdomain
 
-                # If it find something that has a period in it...
-                if multi_level != -1:
-                    # Split it into two parts, the "www" and the "testing.box"...
-                    subdomain_split = subdomain.split('.', 1)
-                    # ...and we only care about the first entry
-                    subdomain = subdomain_split[0]  
+                # Make sure there's actually something there
+                if len(subdomain) > 0:
 
-                i = 0
-                # See if any of the subdomains_to_ignore are substrings of the one we're checking
-                # e.g. "devshell-vm" is a substring of "devshell-vm-0000-0000-00000000"
-                for search in subdomains_to_ignore:
-                    # If it matches, increase the counter
-                    if search in subdomain:
-                        i += 1
-                
-                # See if any of the subdomains_regex_to_ignore are substrings of the one we're checking
-                for search in subdomains_regex_to_ignore:
-                    # If it matches, increase the counter
-                    if re.search(search, subdomain):
-                        i += 1
+                    # Sometimes extract.subdomain gives us something like "www.testing.box"
+                    # so search for anything with a period in it
+                    multi_level = subdomain.find(".")
 
-                # As long as none of the substrings or regexes match, continue on
-                if i == 0:
-                    # Set up the connection to the sqlite db
-                    engine = create_engine('sqlite:///subdomains.db')
-                    Base.metadata.bind = engine
-                    Session = sessionmaker()
-                    Session.configure(bind=engine)
-                    session = Session()
+                    # If it find something that has a period in it...
+                    if multi_level != -1:
+                        # Split it into two parts, the "www" and the "testing.box"...
+                        subdomain_split = subdomain.split('.', 1)
+                        # ...and we only care about the first entry
+                        subdomain = subdomain_split[0]  
 
-                    # Check to see if it already exists in the database...
-                    subdomain_exists = session.query(Subdomain).filter_by(subdomain=subdomain).first()
+                    i = 0
+                    # See if any of the subdomains_to_ignore are substrings of the one we're checking
+                    # e.g. "devshell-vm" is a substring of "devshell-vm-0000-0000-00000000"
+                    for search in subdomains_to_ignore:
+                        # If it matches, increase the counter
+                        if search in subdomain:
+                            i += 1
                     
-                    # It doesn't exist...
-                    if not subdomain_exists:
-                        # ...so create it
-                        subdomain_new = Subdomain(subdomain=subdomain, count=1)
-                        session.add(subdomain_new)
-                        session.commit()
+                    # See if any of the subdomains_regex_to_ignore are substrings of the one we're checking
+                    for search in subdomains_regex_to_ignore:
+                        # If it matches, increase the counter
+                        if re.search(search, subdomain):
+                            i += 1
 
-                        # Debug line
-                        print("[+] " + subdomain)
-                    
-                    # It does exist
-                    if subdomain_exists:
-                        # Add one to the counter to track its popularity
-                        counter = subdomain_exists.count + 1
+                    # As long as none of the substrings or regexes match, continue on
+                    if i == 0:
+                        # Set up the connection to the sqlite db
+                        engine = create_engine('sqlite:///subdomains.db')
+                        Base.metadata.bind = engine
+                        Session = sessionmaker()
+                        Session.configure(bind=engine)
+                        session = Session()
 
-                        # Add 1 to the counter
-                        session.query(Subdomain).filter(Subdomain.id == subdomain_exists.id).\
-                            update({'count': counter})
-                        session.commit()
+                        # Check to see if it already exists in the database...
+                        subdomain_exists = session.query(Subdomain).filter_by(subdomain=subdomain).first()
+                        
+                        # It doesn't exist...
+                        if not subdomain_exists:
+                            # ...so create it
+                            subdomain_new = Subdomain(subdomain=subdomain, count=1)
+                            session.add(subdomain_new)
+                            session.commit()
 
-                        if (counter % 50 == 0):
-                            print("[#] " + subdomain + " (seen " + str(counter) + " times)")
+                            # Debug line
+                            print("[+] " + subdomain)
+                        
+                        # It does exist
+                        if subdomain_exists:
+                            # Add one to the counter to track its popularity
+                            counter = subdomain_exists.count + 1
+
+                            # Add 1 to the counter
+                            session.query(Subdomain).filter(Subdomain.id == subdomain_exists.id).\
+                                update({'count': counter})
+                            session.commit()
+
+                            if (counter % 50 == 0):
+                                print("[#] " + subdomain + " (seen " + str(counter) + " times)")
                         
 
 def dump():
@@ -152,6 +163,8 @@ def parse_args():
     parser.error = parser_error
     parser._optionals.title = "OPTIONS"
     parser.add_argument('-d', '--dump', help="Dump the list of collected subdomains to names.txt", action='store_true')
+    parser.add_argument('-f', '--filter', help="A space-separated list of domain names to filter for (e.g. 'google.com' or 'tesco.co.uk tesco.com harrods.com')", nargs='+')
+    
     return parser.parse_args()
 
 def parser_error(errmsg):

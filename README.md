@@ -34,7 +34,7 @@ sudo pip3 install -r requirements.txt
 Short Form               | Long Form                      | Description
 ------------------------ | ------------------------------ |-------------
 ./Substr3am              |                                | Start collecting subdomains and write them to the subdomains.db sqlite DB
-./Substr3am -f [DOMAINS] | ./Substr3am --filter [DOMAINS] | A space-separated list of domain names to filter for (e.g. 'google.com' or 'tesco.co.uk')
+./Substr3am -f [DOMAINS] | ./Substr3am --filter [DOMAINS] | A space-separated list of domain names to filter for (e.g. 'google.com' or 'tesco.co.uk tesco.com harrods.com')
 ./Substr3am -d           | ./Substr3am --dump             | Dump the list of collected subdomains to names.txt
 
 ### Examples

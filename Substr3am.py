@@ -162,7 +162,7 @@ def parser_error(errmsg):
 
 def main():
     # Actually connect to the certstream firehose, and listen for events
-    certstream.listen_for_events(print_callback)
+    certstream.listen_for_events(print_callback, url='wss://certstream.calidog.io/')
 
 def interactive():
     args = parse_args()

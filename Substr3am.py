@@ -59,7 +59,8 @@ def print_callback(message, context):
         for domain in domains:
             # Use the tldextract library to break the domain into its parts
             extract = tldextract.extract(domain)
-            # Determine the domain by adding the chosen name with the TLD/suffix
+
+            # Determine the root domain by concatenating the chosen name ('microsoft') with the TLD/suffix ('com')
             computed_domain = extract.domain + '.' + extract.suffix
 
             # Only continue if one of the following are true:
@@ -67,24 +68,30 @@ def print_callback(message, context):
             # - We are filtering by domain and we have a match
             if domain_filter == None or (domain_filter != None and computed_domain in domain_filter):
 
-                # We only care about the subdomain
-                subdomain = extract.subdomain
+                # Set the domain based on whether or not we're filtering 
+                if domain_filter == None:
+                    subdomain = extract.subdomain
+                else:
+                    subdomain = domain
 
                 # Make sure there's actually something there
                 if len(subdomain) > 0:
 
                     # Sometimes extract.subdomain gives us something like "www.testing.box"
+                    # which is fine when we're filtering by domain by not when we're not
                     # so search for anything with a period in it
                     multi_level = subdomain.find(".")
 
-                    # If it find something that has a period in it...
-                    if multi_level != -1:
+                    # And then if it find something that has a period in it and we're not filtering...
+                    if multi_level != -1 and domain_filter == None:
                         # Split it into two parts, the "www" and the "testing.box"...
                         subdomain_split = subdomain.split('.', 1)
                         # ...and we only care about the first entry
                         subdomain = subdomain_split[0]  
 
+                    # This counter needs to stay at 0 if we're going to act on this entry
                     i = 0
+
                     # See if any of the subdomains_to_ignore are substrings of the one we're checking
                     # e.g. "devshell-vm" is a substring of "devshell-vm-0000-0000-00000000"
                     for search in subdomains_to_ignore:

@@ -1,4 +1,4 @@
 certstream
-tldextract
+tldextract<3.0
 sqlalchemy
 argparse

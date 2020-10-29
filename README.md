@@ -12,7 +12,9 @@ git clone https://github.com/nexxai/Substr3am.git
 
 Substr3am currently supports **Python 3**.  Stop using **Python 2**.  I suck at Python and even I know that.
 
-* The recommended version for Python 3 is **3.7.x**
+* The recommended version for Python 3 is **3.8.x**
+
+NOTE: There is currently an issue with a dependency and Python v3.9 so do not upgrade to that version for now as you will receive websockets errors until the dependency is updated.
 
 ## Dependencies:
 
@@ -24,7 +26,7 @@ These dependencies can be installed using the requirements file:
 ```
 c:\python\python.exe -m pip install -r requirements.txt
 ```
-- Installation on Linux
+- Installation on Linux / MacOS:
 ```
 sudo pip3 install -r requirements.txt
 ```

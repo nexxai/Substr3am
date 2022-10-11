@@ -35,9 +35,9 @@ sudo pip3 install -r requirements.txt
 
 Short Form               | Long Form                      | Description
 ------------------------ | ------------------------------ |-------------
-./Substr3am              |                                | Start collecting subdomains and write them to the subdomains.db sqlite DB
-./Substr3am -f [DOMAINS] | ./Substr3am --filter [DOMAINS] | A space-separated list of domain names to filter for (e.g. 'google.com' or 'tesco.co.uk tesco.com harrods.com').  *BE PATIENT* - if you are filtering by domain(s), there will only be activity when new certs are issued so just let it run and it'll announce when it sees any new ones.
-./Substr3am -d           | ./Substr3am --dump             | Dump the list of collected subdomains to names.txt
+`./Substr3am`              |                                | Start collecting subdomains and write them to the subdomains.db sqlite DB
+`./Substr3am -f [DOMAINS]` | `./Substr3am --filter [DOMAINS]` | A space-separated list of domain names to filter for (e.g. 'google.com' or 'tesco.co.uk tesco.com harrods.com').  *BE PATIENT* - if you are filtering by domain(s), there will only be activity when new certs are issued so just let it run and it'll announce when it sees any new ones.
+`./Substr3am -d`           | `./Substr3am --dump`             | Dump the list of collected subdomains to names.txt
 
 ### Examples
 
